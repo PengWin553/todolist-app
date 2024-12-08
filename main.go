@@ -86,6 +86,32 @@ func main() {
 		return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
 	})
 
+	// DELETE A TODO
+	// Define an HTTP DELETE route to delete a Todo by its ID
+	app.Delete("/api/todos/:id", func(c *fiber.Ctx) error {
+		// Extract the "id" parameter from the URL path
+		// c.Params("id") retrieves the value of the `:id` placeholder in the route
+		id := c.Params("id")
+
+		// Iterate over the `todos` slice to find the Todo with a matching ID
+		for i, todo := range todos {
+			// Use `fmt.Sprint` to convert the integer `todo.ID` to a string for comparison
+			if fmt.Sprint(todo.ID) == id {
+				// If the ID matches, remove the Todo from the `todos` slice
+				// Use slicing to create a new slice excluding the matched item
+				todos = append(todos[:i], todos[i+1:]...)
+
+				// Respond to the client with a 200 (OK) status and a success message
+				return c.Status(200).JSON(fiber.Map{"success": true})
+			}
+		}
+
+		// If no Todo with the matching ID is found:
+		// - Respond with a 404 (Not Found) status code
+		// - Include a JSON error message for the client
+		return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
+	})
+
 	// Start the web server on port 4000
 	// log.Fatal ensures the application stops if the server fails to start
 	log.Fatal(app.Listen(":4000"))
