@@ -1,8 +1,0 @@
-0. Run your go app:
-    go run <appname.go>
-    Example:
-        go run main.go
-1. Clear up console:
-    cls 
-2. Kill the running Fiber application in your terminal (to restart the app)
-    CTRL + C
