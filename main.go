@@ -25,6 +25,13 @@ func main() {
 	// A slice (dynamic array) to store Todo items in memory
 	todos := []Todo{}
 
+	// GET ALL TODOS
+	app.Get("/api/todos", func(c *fiber.Ctx) error {
+		// Return all todos as JSON
+		return c.Status(200).JSON(todos)
+	})
+
+	// CREATE A TODO
 	// Define an HTTP POST route to create a new Todo
 	app.Post("/api/todos", func(c *fiber.Ctx) error {
 		// Create a new instance of the Todo struct
@@ -52,6 +59,31 @@ func main() {
 
 		// Respond to the client with a 201 (Created) status and the new Todo item in JSON format
 		return c.Status(201).JSON(todo)
+	})
+
+	// UPDATE A TODO
+	// Define an HTTP PATCH route to update a Todo's "Completed" status
+	app.Patch("/api/todos/:id", func(c *fiber.Ctx) error {
+		// Extract the "id" parameter from the URL path
+		// c.Params("id") retrieves the value of the `:id` placeholder in the route
+		id := c.Params("id")
+
+		// Iterate over the `todos` slice to find the Todo with a matching ID
+		for i, todo := range todos {
+			// Use `fmt.Sprint` to convert the integer `todo.ID` to a string for comparison
+			if fmt.Sprint(todo.ID) == id {
+				// If the ID matches, update the "Completed" status of the Todo to `true`
+				todos[i].Completed = true
+
+				// Respond to the client with the updated Todo and a 200 (OK) status
+				return c.Status(200).JSON(todos[i])
+			}
+		}
+
+		// If no Todo with the matching ID is found:
+		// - Respond with a 404 (Not Found) status code
+		// - Include a JSON error message for the client
+		return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
 	})
 
 	// Start the web server on port 4000
