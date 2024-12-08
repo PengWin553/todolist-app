@@ -105,3 +105,18 @@ Additional Tips:
    Ex (a get request) http://localhost:4000/
 7. Download and install Postman Desktop Agent
 8. Run the request
+====
+** Running first Post Request in repo commit "feat: Create todo"
+1. Add a post request in your collections named "CREATE A TODO"
+2. Set it a a post request with the url http://localhost:4000/api/todos that matches what was in your Code
+3. Select "raw" and JSON
+4. In the body, type in something like below to create a todo:
+      {
+         "body":"task 1"
+      }
+4.1 This will be a sample response:
+      {
+         "id": 2,
+         "completed": false,
+         "body": "task 2"
+      }
