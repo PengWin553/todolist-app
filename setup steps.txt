@@ -65,3 +65,32 @@ Additional Tips:
   - Code navigation
   - Debugging support
 
+====
+** Install go.mod **
+
+1. Open your project folder
+2. Run this command:
+            go mod init github.com/<yourGithubName>/<yourGithubRepositoryYouWantToWorkWith>
+   EXAMPLE: go mod init github.com/PengWin553/todolist-app
+====
+
+** Install Fiber framework
+
+1. Open your project folder
+2. Run this command:
+               go get -u github.com/gofiber/fiber/v2
+====
+** Install Air - To auto-restart app when changes occur ** 
+
+1. Open your project folder
+2. Run this command: 
+               go install github.com/air-verse/air@latest
+3. Go to your project folder and create a file named 'air.toml'
+4. Go to extensions and install 'Even Better TOML' by tamasfe
+5. To use the auto reload, go to your command prompt and open the app
+   Example:
+            PS C:\Users\SECCA> cd Documents
+            PS C:\Users\SECCA\Documents> cd "2024 systems"
+            PS C:\Users\SECCA\Documents\2024 systems> cd todolist-app
+            PS C:\Users\SECCA\Documents\2024 systems\todolist-app> air
+====
