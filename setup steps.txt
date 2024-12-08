@@ -1,0 +1,67 @@
+Here's a clear, step-by-step guide to setting up and running Golang in Visual Studio Code:
+
+1. Install Go
+   - Go to https://go.dev/dl/
+   - Download the installer for your operating system (Windows)
+   - Run the installer
+   - IMPORTANT: Check the option to "Add Go to PATH" during installation
+
+2. Prepare Visual Studio Code
+   - Open Visual Studio Code
+   - Go to Extensions (Ctrl+Shift+X)
+   - Search for "Go" 
+   - Install the official "Go" extension by Go Team at Google
+
+3. Reload VS Code
+   - Press Ctrl + Shift + P
+   - Type 'reload'
+   - Select 'Developer: Reload Window'
+
+4. Install Go Tools
+   - Open Command Prompt or PowerShell
+   - Run these commands:
+     ```
+     go install -v golang.org/x/tools/gopls@latest
+     go install -v github.com/ramya-rao-a/go-outline@latest
+     ```
+
+5. Create Your First Go Project
+   - Open VS Code
+   - File > Open Folder (select or create a new project folder)
+   - Create a new file named `hello-world.go`
+
+6. Write Your First Go Program
+   - In `hello-world.go`, type:
+     ```go
+     package main
+
+     import "fmt"
+
+     func main() {
+         fmt.Println("Hello, World!")
+     }
+     ```
+
+7. Run the Program
+   - Option 1: Using VS Code Run Button
+     - Look for the "Run" triangle (play button) at the top right of the editor
+     - Click it to run the program
+   - Option 2: Using Terminal
+     - Open Terminal in VS Code (Terminal > New Terminal)
+     - Type: `go run hello-world.go`
+
+8. Troubleshooting
+   - If you encounter any issues:
+     - Ensure Go is in your system PATH
+     - Restart VS Code
+     - Check that Go tools are installed correctly
+     - Look for any error messages in the VS Code output or terminal
+
+Additional Tips:
+- VS Code may prompt you to install additional Go tools when you open a Go file
+- Accept these prompts to set up a complete development environment
+- The Go extension provides features like:
+  - Intellisense
+  - Code navigation
+  - Debugging support
+
