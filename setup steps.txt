@@ -94,3 +94,14 @@ Additional Tips:
             PS C:\Users\SECCA\Documents\2024 systems> cd todolist-app
             PS C:\Users\SECCA\Documents\2024 systems\todolist-app> air
 ====
+** Install Postman Extension **
+
+1. Go to your extensions and install Postman by Postman
+2. Go to https://identity.getpostman.com/signup?auth_challenge=320e7b895ea620fd9aa01b5ea7c8c50ae6ff65eb88614bcab4fa26afc43a00b3&auth_device=vscode_postman&auth_device_version=1.5.0
+3. Sign in with your google account
+4. Create a workspace
+5. Create a collection in your workspace
+6. Add request to your collection
+   Ex (a get request) http://localhost:4000/
+7. Download and install Postman Desktop Agent
+8. Run the request
