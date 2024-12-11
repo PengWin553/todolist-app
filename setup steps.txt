@@ -125,3 +125,77 @@ Additional Tips:
 1. Run this in your terminal:
             go get github.com/joho/godotenv
 2. Create an .env file in your project folder
+====
+** Setup MongoDb **
+1. Go to https://cloud.mongodb.com/ and sign in for free 
+2. Create an organization
+3. Create a project
+   3.1 Create a new project
+   3.2 Name your new project like "todolist-app" (and set key and value the same like "todolist-app")
+   3.3 Set yourself as project owner
+4. Create a deployment
+   4.1 Select the free-tier and set the default options selected
+   4.2 Connect to cluster
+   4.3 Choose a connection method
+     - Select Drivers
+     - Copy the string
+     - Review and confirm
+5. To prevent development errors, go to the Network Access on the sidebar
+   5.1 Add new IP address
+   5.2 Click "Allow access from anywhere"
+6. Click the sidebar's "Database" option
+   6.1 Select "Browse Collections"
+   6.2 See that you have 0 Collections
+7. Go to your project's terminal and type the following to get the mongo driver:
+   go get go.mongodb.org/mongo-driver/mongo
+8. The sample main.go code below should connect your to MongoDb Atlas:
+
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+// Define the structure of a Todo item
+type Todo struct {
+	ID        int    `json:"id" bson:"_id"` // Unique identifier for each Todo item (will be auto-assigned); bson (Binary Json) because mongo stores its data in the form of bson
+	Completed bool   `json:"completed"`     // Indicates if the Todo is completed (true/false)
+	Body      string `json:"body"`          // The content or description of the Todo
+}
+
+var collecton *mongo.Collection
+
+func main() {
+	fmt.Println("yellow, world")
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file:", err)
+	}
+
+	MONGODB_URI := os.Getenv("MONGODB_URI")
+	clientOptions := options.Client().ApplyURI(MONGODB_URI)
+	client, err := mongo.Connect(context.Background(), clientOptions)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = client.Ping(context.Background(), nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Connected to MONGODB Atlas")
+}
+
+
+

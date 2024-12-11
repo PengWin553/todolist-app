@@ -1,127 +1,75 @@
+// Package declaration for a standalone executable
 package main
 
 // Import necessary packages
 import (
-	"fmt" // Used for printing messages to the console
-	"log" // Used for logging errors
-	"os"
+	"context" // Provides support for managing request-scoped values, cancellation signals, and deadlines
+	"fmt"     // Implements formatted I/O functions for printing
+	"log"     // Provides logging functionality
+	"os"      // Provides a platform-independent interface to operating system functionality
 
-	"github.com/gofiber/fiber/v2" // The Fiber web framework for building APIs
-	"github.com/joho/godotenv"
+	"github.com/joho/godotenv"                  // Loads environment variables from a .env file
+	"go.mongodb.org/mongo-driver/mongo"         // MongoDB Go driver for database operations
+	"go.mongodb.org/mongo-driver/mongo/options" // Provides configuration options for MongoDB client
 )
 
-// Define the structure of a Todo item
+// Todo struct defines the structure of a todo item in the application
+// This represents how a todo will be stored in the MongoDB database
 type Todo struct {
-	ID        int    `json:"id"`        // Unique identifier for each Todo item (will be auto-assigned)
-	Completed bool   `json:"completed"` // Indicates if the Todo is completed (true/false)
-	Body      string `json:"body"`      // The content or description of the Todo
+	// ID is the unique identifier for each Todo item
+	// `json:"id"` defines how the field is serialized to JSON
+	// `bson:"_id"` specifies how the field is stored in MongoDB (MongoDB uses '_id' as the default ID field)
+	ID int `json:"id" bson:"_id"`
+
+	// Completed indicates whether the todo item has been finished
+	// Boolean field that can be true (completed) or false (not completed)
+	Completed bool `json:"completed"`
+
+	// Body contains the text description of the todo item
+	Body string `json:"body"`
 }
 
+// Declare a global variable to hold the MongoDB collection
+// This will be used to interact with the specific collection in the database
+var collecton *mongo.Collection // Note: there's a typo here, it should be 'collection'
+
+// main is the entry point of the Go application
 func main() {
-	// Print a startup message to the console
-	fmt.Println("Hello, World. Peng Win")
+	// Print a greeting (slight typo in the original - should be "Hello" instead of "yellow")
+	fmt.Println("yellow, world")
 
-	// Create a new Fiber application instance
-	app := fiber.New()
-
+	// Load environment variables from .env file
+	// This allows storing sensitive information like database credentials outside the code
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		// If .env file can't be loaded, terminate the program with an error message
+		log.Fatal("Error loading .env file:", err)
 	}
 
-	PORT := os.Getenv("PORT")
+	// Retrieve MongoDB connection URI from environment variables
+	// This keeps sensitive connection information out of the source code
+	MONGODB_URI := os.Getenv("MONGODB_URI")
 
-	// A slice (dynamic array) to store Todo items in memory
-	todos := []Todo{}
+	// Create client options using the MongoDB URI
+	// This configures how the application will connect to the MongoDB database
+	clientOptions := options.Client().ApplyURI(MONGODB_URI)
 
-	// GET ALL TODOS
-	app.Get("/api/todos", func(c *fiber.Ctx) error {
-		// Return all todos as JSON
-		return c.Status(200).JSON(todos)
-	})
+	// Establish a connection to the MongoDB database
+	// context.Background() provides a default context
+	client, err := mongo.Connect(context.Background(), clientOptions)
+	if err != nil {
+		// If connection fails, terminate the program
+		log.Fatal(err)
+	}
 
-	// CREATE A TODO
-	// Define an HTTP POST route to create a new Todo
-	app.Post("/api/todos", func(c *fiber.Ctx) error {
-		// Create a new instance of the Todo struct
-		todo := &Todo{}
+	// Verify the database connection by pinging the server
+	// This ensures that the connection is active and working
+	err = client.Ping(context.Background(), nil)
+	if err != nil {
+		// If ping fails, terminate the program
+		log.Fatal(err)
+	}
 
-		// Parse the JSON body from the incoming HTTP request into the Todo struct
-		// c.BodyParser() reads the request body and maps it to the `todo` object
-		if err := c.BodyParser(todo); err != nil {
-			// If parsing fails, return a 400 (Bad Request) error with a helpful message
-			return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
-		}
-
-		// Validate that the "body" field is not empty
-		// If it's empty, return a 400 error with an appropriate message
-		if todo.Body == "" {
-			return c.Status(400).JSON(fiber.Map{"error": "Todo body is required"})
-		}
-
-		// Assign a unique ID to the new Todo
-		// The ID is set to the current length of the `todos` slice + 1
-		todo.ID = len(todos) + 1
-
-		// Add the new Todo item to the `todos` slice
-		todos = append(todos, *todo)
-
-		// Respond to the client with a 201 (Created) status and the new Todo item in JSON format
-		return c.Status(201).JSON(todo)
-	})
-
-	// UPDATE A TODO
-	// Define an HTTP PATCH route to update a Todo's "Completed" status
-	app.Patch("/api/todos/:id", func(c *fiber.Ctx) error {
-		// Extract the "id" parameter from the URL path
-		// c.Params("id") retrieves the value of the `:id` placeholder in the route
-		id := c.Params("id")
-
-		// Iterate over the `todos` slice to find the Todo with a matching ID
-		for i, todo := range todos {
-			// Use `fmt.Sprint` to convert the integer `todo.ID` to a string for comparison
-			if fmt.Sprint(todo.ID) == id {
-				// If the ID matches, update the "Completed" status of the Todo to `true`
-				todos[i].Completed = true
-
-				// Respond to the client with the updated Todo and a 200 (OK) status
-				return c.Status(200).JSON(todos[i])
-			}
-		}
-
-		// If no Todo with the matching ID is found:
-		// - Respond with a 404 (Not Found) status code
-		// - Include a JSON error message for the client
-		return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
-	})
-
-	// DELETE A TODO
-	// Define an HTTP DELETE route to delete a Todo by its ID
-	app.Delete("/api/todos/:id", func(c *fiber.Ctx) error {
-		// Extract the "id" parameter from the URL path
-		// c.Params("id") retrieves the value of the `:id` placeholder in the route
-		id := c.Params("id")
-
-		// Iterate over the `todos` slice to find the Todo with a matching ID
-		for i, todo := range todos {
-			// Use `fmt.Sprint` to convert the integer `todo.ID` to a string for comparison
-			if fmt.Sprint(todo.ID) == id {
-				// If the ID matches, remove the Todo from the `todos` slice
-				// Use slicing to create a new slice excluding the matched item
-				todos = append(todos[:i], todos[i+1:]...)
-
-				// Respond to the client with a 200 (OK) status and a success message
-				return c.Status(200).JSON(fiber.Map{"success": true})
-			}
-		}
-
-		// If no Todo with the matching ID is found:
-		// - Respond with a 404 (Not Found) status code
-		// - Include a JSON error message for the client
-		return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
-	})
-
-	// Start the web server on port 4000
-	// log.Fatal ensures the application stops if the server fails to start
-	log.Fatal(app.Listen(":" + PORT))
+	// Print a success message when connection is established
+	fmt.Println("Connected to MONGODB Atlas")
 }
