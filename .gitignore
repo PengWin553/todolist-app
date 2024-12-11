@@ -9,6 +9,9 @@ node_modules/
 *.a
 *.so
 
+# logs
+*.log
+
 # Folders that store compiled or temporary files
 _obj/
 _test/
