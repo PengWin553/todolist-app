@@ -197,5 +197,19 @@ func main() {
 	fmt.Println("Connected to MONGODB Atlas")
 }
 
-
+====
+** SETUP REACT + TYPESCRIPT **
+1. Open your project's terminal
+2. Type:
+       mkdir client 
+3. Type: 
+      cd client 
+4. Type:
+      create vite@latest .
+5. Select REACT
+6. Select TYPESCRIPT
+7. Type:
+      npm install
+8. Type:
+      npm run dev
 
