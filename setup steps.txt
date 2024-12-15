@@ -221,3 +221,14 @@ func main() {
 4. Press "Framework Guides"
 5. Press "Vite"
 6. Follow the guidelines (start with #2)
+=====
+** SETUP PACKAGES tanstack, and types (for typescript) **
+
+1. Go to your client and paste the following:
+                                             npm install @tanstack/react-query
+                                             npm install @types/react-query
+======
+** Added CORS middleware **
+
+1. Go to your server's terminal and type:
+                                          go get github.com/gofiber/fiber/v2/middleware/cors

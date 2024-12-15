@@ -3,105 +3,91 @@ package main
 
 // Import necessary packages
 import (
-	"context" // Provides support for managing request-scoped values, cancellation signals, and deadlines
-	"fmt"     // Implements formatted I/O functions for printing
-	"log"     // Provides logging functionality
-	"os"      // Provides a platform-independent interface to operating system functionality
+	"context"
+	"fmt"
+	"log"
+	"os"
 
-	"github.com/gofiber/fiber/v2" // High-performance web framework for Go
-	"github.com/joho/godotenv"    // Loads environment variables from a .env file
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors" // Add CORS middleware
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"         // MongoDB Go driver for database operations
-	"go.mongodb.org/mongo-driver/mongo/options" // Provides configuration options for MongoDB client
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Todo struct defines the structure of a todo item in the application
-// This represents how a todo will be stored in the MongoDB database
+// Todo struct remains the same
 type Todo struct {
-	// ID is the unique identifier for each Todo item
-	// `json:"id"` defines how the field is serialized to JSON
-	// `bson:"_id"` specifies how the field is stored in MongoDB (MongoDB uses '_id' as the default ID field)
-	// omitempty means the field will be omitted from the output if it's empty
-	ID primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-
-	// Completed indicates whether the todo item has been finished
-	// Boolean field that can be true (completed) or false (not completed)
-	Completed bool `json:"completed"`
-
-	// Body contains the text description of the todo item
-	Body string `json:"body"`
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Completed bool               `json:"completed"`
+	Body      string             `json:"body"`
 }
 
-// Declare a global variable to hold the MongoDB collection
-// This will be used to interact with the specific collection in the database
+// Global variable for MongoDB collection
 var collection *mongo.Collection
 
-// main is the entry point of the Go application
-// It sets up the database connection and configures the web server
 func main() {
-	// Print a greeting to confirm the application is starting
-	fmt.Println("Hello, world!")
+	fmt.Println("Hello, world!!!")
 
-	// Load environment variables from .env file
-	// This allows storing sensitive information like database credentials outside the code
+	// Load environment variables
 	err := godotenv.Load(".env")
 	if err != nil {
-		// If .env file can't be loaded, terminate the program with an error message
 		log.Fatal("Error loading .env file:", err)
 	}
 
-	// Retrieve MongoDB connection URI from environment variables
-	// This keeps sensitive connection information out of the source code
+	// Retrieve MongoDB connection URI
 	MONGODB_URI := os.Getenv("MONGODB_URI")
 
-	// Create client options using the MongoDB URI
-	// This configures how the application will connect to the MongoDB database
+	// Create client options
 	clientOptions := options.Client().ApplyURI(MONGODB_URI)
 
-	// Establish a connection to the MongoDB database
-	// context.Background() provides a default context
+	// Establish database connection
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
-		// If connection fails, terminate the program
 		log.Fatal(err)
 	}
 
-	// Ensure the database connection is closed when the application exits
+	// Ensure database connection is closed
 	defer client.Disconnect(context.Background())
 
-	// Verify the database connection by pinging the server
-	// This ensures that the connection is active and working
+	// Verify the database connection
 	err = client.Ping(context.Background(), nil)
 	if err != nil {
-		// If ping fails, terminate the program
 		log.Fatal(err)
 	}
 
-	// Print a success message when connection is established
 	fmt.Println("Connected to MONGODB Atlas")
 
-	// Set up the specific collection in the database that will be used for todos
+	// Set up the collection
 	collection = client.Database("todolist_app_db").Collection("todos")
 
 	// Create a new Fiber web application instance
 	app := fiber.New()
 
-	// Define API routes for CRUD operations on todos
-	app.Get("/api/todos", getTodos)          // Retrieve all todos
-	app.Post("/api/todos", createTodo)       // Create a new todo
-	app.Patch("/api/todos/:id", updateTodo)  // Update an existing todo
-	app.Delete("/api/todos/:id", deleteTodo) // Delete a todo
+	// Add CORS middleware
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "http://localhost:5173", // Your frontend URL
+		AllowMethods:     "GET,POST,PATCH,DELETE,OPTIONS",
+		AllowHeaders:     "Origin,Content-Type,Accept",
+		AllowCredentials: true,
+	}))
+
+	// Define API routes
+	app.Get("/api/todos", getTodos)
+	app.Post("/api/todos", createTodo)
+	app.Patch("/api/todos/:id", updateTodo)
+	app.Delete("/api/todos/:id", deleteTodo)
 
 	// Determine the port to run the server on
-	// Use PORT from environment variables, or default to 5000
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5000"
 	}
 
-	// Start the web server listening on all network interfaces
-	app.Listen("0.0.0.0:" + port)
+	// Start the web server
+	fmt.Printf("Server starting on port %s\n", port)
+	log.Fatal(app.Listen("0.0.0.0:" + port))
 }
 
 // getTodos retrieves all todo items from the database
