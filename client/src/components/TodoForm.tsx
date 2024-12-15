@@ -57,13 +57,39 @@ const TodoForm: React.FC = () => {
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          className="flex-grow px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="
+            flex-grow 
+            px-2 
+            py-1 
+            border 
+            rounded-md 
+            focus:outline-none 
+            focus:ring-2 
+            focus:ring-blue-500 
+            text-black 
+            dark:text-black 
+            dark:bg-gray-200 
+            dark:border-gray-300
+          "
           placeholder="Enter a new todo"
         />
         <button
           type="submit"
           disabled={isCreating}
-          className="mx-2 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 active:scale-95 transition-transform flex items-center justify-center disabled:opacity-50"
+          className="
+            mx-2 
+            p-2 
+            bg-blue-500 
+            text-white 
+            rounded-md 
+            hover:bg-blue-600 
+            active:scale-95 
+            transition-transform 
+            flex 
+            items-center 
+            justify-center 
+            disabled:opacity-50
+          "
         >
           {isCreating ? (
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

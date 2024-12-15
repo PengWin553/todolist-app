@@ -59,7 +59,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 			>
 				<span 
 					className={`
-						${todo.completed ? 'text-green-200 line-through' : 'text-black-100'}
+						${todo.completed ? 'text-green-300 line-through' : 'text-black-100'}
 					`}
 				>
 					{todo.body}

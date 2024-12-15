@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
+import { useColorMode } from '../App';
 
 export default function Navbar() {
-    const [colorMode, setColorMode] = useState('light');
-
-    const toggleColorMode = () => {
-        setColorMode(colorMode === 'light' ? 'dark' : 'light');
-    };
+    const { colorMode, toggleColorMode } = useColorMode();
 
     return (
         <div className="max-w-[900px] mx-auto">
             <div className={`
-                ${colorMode === 'light' ? 'bg-gray-400' : 'bg-gray-700'} 
+                ${colorMode === 'light' 
+                    ? 'bg-gray-400 text-black' 
+                    : 'bg-gray-700 text-white'}
                 px-4 my-4 rounded-md
             `}>
                 <div className="flex h-16 items-center justify-between">
