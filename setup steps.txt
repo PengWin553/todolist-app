@@ -212,4 +212,12 @@ func main() {
       npm install
 8. Type:
       npm run dev
+====
+** SETUP TAILWIND CSS IN REACT WITH VITE**
 
+1. Go to https://tailwindcss.com/
+2. Press "Get Started"
+3. Press "Docs" on the Navbar
+4. Press "Framework Guides"
+5. Press "Vite"
+6. Follow the guidelines (start with #2)
