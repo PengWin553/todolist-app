@@ -1,3 +1,7 @@
+NOTE: Each setup step is divided into sections indicated by "===".
+
+===========================================================================
+
 Here's a clear, step-by-step guide to setting up and running Golang in Visual Studio Code:
 
 1. Install Go
@@ -65,21 +69,25 @@ Additional Tips:
   - Code navigation
   - Debugging support
 
-====
+===========================================================================
+
 ** Install go.mod **
 
 1. Open your project folder
 2. Run this command:
             go mod init github.com/<yourGithubName>/<yourGithubRepositoryYouWantToWorkWith>
    EXAMPLE: go mod init github.com/PengWin553/todolist-app
-====
+
+===========================================================================
 
 ** Install Fiber framework
 
 1. Open your project folder
 2. Run this command:
                go get -u github.com/gofiber/fiber/v2
-====
+
+===========================================================================
+
 ** Install Air - To auto-restart app when changes occur ** 
 
 1. Open your project folder
@@ -93,7 +101,9 @@ Additional Tips:
             PS C:\Users\SECCA\Documents> cd "2024 systems"
             PS C:\Users\SECCA\Documents\2024 systems> cd todolist-app
             PS C:\Users\SECCA\Documents\2024 systems\todolist-app> air
-====
+
+===========================================================================
+
 ** Install Postman Extension **
 
 1. Go to your extensions and install Postman by Postman
@@ -105,7 +115,9 @@ Additional Tips:
    Ex (a get request) http://localhost:4000/
 7. Download and install Postman Desktop Agent
 8. Run the request
-====
+
+===========================================================================
+
 ** Running first Post Request in repo commit "feat: Create todo"
 1. Add a post request in your collections named "CREATE A TODO"
 2. Set it a a post request with the url http://localhost:4000/api/todos that matches what was in your Code
@@ -120,12 +132,21 @@ Additional Tips:
          "completed": false,
          "body": "task 2"
       }
-====
+
+===========================================================================
+
 ** Install the godotenv package, which is a Go library used to load environment variables from a .env file into your application. **
 1. Run this in your terminal:
             go get github.com/joho/godotenv
 2. Create an .env file in your project folder
-====
+3. Setup MongoDb to complete the values in your .env file. The setup for the MongoDb is the next one right below this setup steps
+   Your .env file:
+                     PORT=5000
+                     MONGODB_URI=<your_uri_goes_here>     
+                     ENV=development
+
+===========================================================================
+
 ** Setup MongoDb **
 1. Go to https://cloud.mongodb.com/ and sign in for free 
 2. Create an organization
@@ -197,7 +218,8 @@ func main() {
 	fmt.Println("Connected to MONGODB Atlas")
 }
 
-====
+===========================================================================
+
 ** SETUP REACT + TYPESCRIPT **
 1. Open your project's terminal
 2. Type:
@@ -212,7 +234,9 @@ func main() {
       npm install
 8. Type:
       npm run dev
-====
+
+===========================================================================
+
 ** SETUP TAILWIND CSS IN REACT WITH VITE**
 
 1. Go to https://tailwindcss.com/
@@ -227,8 +251,12 @@ func main() {
 1. Go to your client and paste the following:
                                              npm install @tanstack/react-query
                                              npm install @types/react-query
-======
+
+===========================================================================
+
 ** Added CORS middleware **
 
 1. Go to your server's terminal and type:
                                           go get github.com/gofiber/fiber/v2/middleware/cors
+
+===========================================================================
