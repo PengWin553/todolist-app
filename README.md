@@ -1,4 +1,3 @@
-# todolist-apP
 # TodoList App 📝  
 
 A **full-stack TodoList application** built with:  
