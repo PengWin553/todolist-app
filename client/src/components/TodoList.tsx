@@ -4,7 +4,7 @@ import TodoItem from "./TodoItem";
 import { BASE_URL } from "../App";
 
 export type Todo = {
-	_id: number;
+	_id: string;  // Change from number to string to match MongoDB ObjectID
 	body: string;
 	completed: boolean;
 };
@@ -61,4 +61,3 @@ const TodoList = () => {
 };
 
 export default TodoList;
-
